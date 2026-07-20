@@ -1,0 +1,2 @@
+D:\Anantkaal\Pool-Game\Pool\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+D:\Anantkaal\Pool-Game\Pool\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt
