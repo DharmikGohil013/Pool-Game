@@ -120,7 +120,8 @@ public class PoolCueController : MonoBehaviour
         return cueBall != null &&
                cueBall.activeSelf &&
                PoolGameManager.Instance != null &&
-               PoolGameManager.Instance.currentState == PoolGameManager.GameState.Playing;
+               PoolGameManager.Instance.currentState == PoolGameManager.GameState.Playing &&
+               !PoolGameManager.Instance.IsShotInProgress;
     }
 
     private void Update()
@@ -286,8 +287,14 @@ public class PoolCueController : MonoBehaviour
         // Hide prediction lines when shot starts
         HideAimingLines();
 
+        // Immediately hide the cue stick GameObject when shot is fired
+        gameObject.SetActive(false);
+
         // Notify game manager
-        PoolGameManager.Instance.NotifyShotStarted();
+        if (PoolGameManager.Instance != null)
+        {
+            PoolGameManager.Instance.NotifyShotStarted();
+        }
     }
 
     // ─── AIMING LINE GENERATION ──────────────────────────────

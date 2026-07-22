@@ -51,6 +51,7 @@ public class PoolGameManager : MonoBehaviour
 
     // Per-turn tracking
     private bool isShotInProgress = false;
+    public bool IsShotInProgress => isShotInProgress;
     private List<GameObject> ballsPocketedThisTurn = new List<GameObject>();
     private bool cueBallPocketedThisTurn = false;
     private bool strikerPocketedThisTurn = false;
@@ -318,6 +319,11 @@ public class PoolGameManager : MonoBehaviour
         Time.timeScale = 1f;
         if (pausePanel != null) pausePanel.SetActive(false);
         if (hudPanel != null) hudPanel.SetActive(true);
+
+        if (!isShotInProgress && setupHelper != null && setupHelper.cueStick != null)
+        {
+            setupHelper.cueStick.SetActive(true);
+        }
     }
 
     public void PauseGame()
@@ -325,6 +331,11 @@ public class PoolGameManager : MonoBehaviour
         currentState = GameState.Paused;
         Time.timeScale = 0f;
         if (pausePanel != null) pausePanel.SetActive(true);
+
+        if (setupHelper != null && setupHelper.cueStick != null)
+        {
+            setupHelper.cueStick.SetActive(false);
+        }
     }
 
     public void RestartGame()
