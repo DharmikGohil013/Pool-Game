@@ -3225,6 +3225,7 @@ MonoBehaviour:
   player1ScoreText: {fileID: 995656200}
   player2ScoreText: {fileID: 1367709808}
   statusText: {fileID: 751357936}
+  pocketYThreshold: 0.3
 --- !u!4 &813356491
 Transform:
   m_ObjectHideFlags: 0
@@ -4959,13 +4960,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1342495142}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.25, z: -5.8}
+  m_LocalRotation: {x: 0.7564246, y: -0, z: -0, w: 0.654081}
+  m_LocalPosition: {x: 0, y: 0.61, z: -5.8}
   m_LocalScale: {x: 0.08, y: 2, z: 0.08}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 98.29999, y: 0, z: 0}
 --- !u!114 &1342495147
 MonoBehaviour:
   m_ObjectHideFlags: 0

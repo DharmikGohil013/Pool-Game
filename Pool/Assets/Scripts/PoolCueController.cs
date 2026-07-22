@@ -106,6 +106,13 @@ public class PoolCueController : MonoBehaviour
 
         // Default Cylinder mesh height = 2.0 along local Y
         stickLength = transform.localScale.y * 2f;
+
+        // Ensure stick colliders are disabled so it never physically interferes with balls
+        Collider[] colliders = GetComponentsInChildren<Collider>(true);
+        foreach (Collider col in colliders)
+        {
+            col.enabled = false;
+        }
     }
 
     private bool CanControl()

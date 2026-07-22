@@ -268,6 +268,13 @@ public class PoolGameSetup : MonoBehaviour
             }
             stickRb.isKinematic = true;
             stickRb.useGravity = false;
+
+            // Disable all colliders on cue stick and its children so it never physically touches or pushes balls
+            Collider[] stickColliders = cueStick.GetComponentsInChildren<Collider>(true);
+            foreach (Collider col in stickColliders)
+            {
+                col.enabled = false;
+            }
         }
     }
 

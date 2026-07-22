@@ -84,6 +84,17 @@ public class PoolGameManager : MonoBehaviour
                 EndShot();
             }
         }
+        else
+        {
+            // Safety check: if cue ball is inactive while shot is NOT in progress, respawn it!
+            if (setupHelper != null && setupHelper.cueBall != null && !setupHelper.cueBall.activeSelf)
+            {
+                Debug.LogWarning("Cue ball inactive while shot is not in progress. Respawning cue ball.");
+                ResetCueBall();
+                SwapTurn("Scratch! Turn \u2192 Player " + (activePlayer == 1 ? 2 : 1));
+                ResetTurnState();
+            }
+        }
     }
 
     private void CheckBallFellOffTable()
@@ -378,6 +389,14 @@ public class PoolGameManager : MonoBehaviour
             cueBallPocketedThisTurn = true;
             StopAndDeactivateBall(ball);
             if (statusText != null) statusText.text = "Scratch! Cue ball pocketed.";
+
+            // If shot is not in progress, immediately reset cue ball & swap turn so game never soft-locks
+            if (!isShotInProgress)
+            {
+                ResetCueBall();
+                SwapTurn("Scratch! Turn \u2192 Player " + (activePlayer == 1 ? 2 : 1));
+                ResetTurnState();
+            }
             return;
         }
 
@@ -386,6 +405,13 @@ public class PoolGameManager : MonoBehaviour
         {
             strikerPocketedThisTurn = true;
             StopAndDeactivateBall(ball);
+
+            // If shot is not in progress, immediately end game
+            if (!isShotInProgress)
+            {
+                EndGameOnStrikerPocketed();
+                ResetTurnState();
+            }
             return;
         }
 
