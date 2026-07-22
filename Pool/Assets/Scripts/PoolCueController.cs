@@ -259,8 +259,9 @@ public class PoolCueController : MonoBehaviour
 
         transform.position = targetPos;
 
-        // Align stick rotation to point at the cue ball (cylinder default orientation)
-        transform.rotation = rotation * Quaternion.Euler(90f, 0f, 0f);
+        // Align stick rotation to point at the cue ball using configured stickRotation X (default 0)
+        float rotX = setupHelper != null ? setupHelper.stickRotation.x : 0f;
+        transform.rotation = rotation * Quaternion.Euler(rotX, 0f, 0f);
     }
 
     private void Shoot()

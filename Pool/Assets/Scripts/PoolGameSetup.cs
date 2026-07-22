@@ -56,7 +56,7 @@ public class PoolGameSetup : MonoBehaviour
     public float stickBallGap = 0.15f;
 
     [Tooltip("Rotation of the cue stick.")]
-    public Vector3 stickRotation = new Vector3(90f, 0f, 0f);
+    public Vector3 stickRotation = new Vector3(0f, 0f, 0f);
 
     private void Start()
     {
@@ -83,13 +83,14 @@ public class PoolGameSetup : MonoBehaviour
         // Find Table
         if (table == null)
         {
-            table = GameObject.Find("Table");
+            table = GameObject.Find("pool_table_scene");
+            if (table == null) table = GameObject.Find("Table");
             if (table == null)
             {
-                // Try searching for any object with 'Table' in the name
                 foreach (GameObject go in GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
                 {
-                    if (go.name.ToLower().Contains("table"))
+                    string name = go.name.ToLower();
+                    if (name.Contains("table") || name.Contains("pool_table"))
                     {
                         table = go;
                         break;
@@ -98,66 +99,69 @@ public class PoolGameSetup : MonoBehaviour
             }
         }
 
-        // Find Cue Ball, Striker and Object Balls among children of this GameObject or in the scene
+        // Find Cue Ball, Striker and Object Balls among children of searchRoot or in scene
         Transform searchRoot = transform;
         
-        // If this script is attached to a manager, check if there is a 'ball' parent in the scene
-        if (searchRoot.childCount == 0)
+        GameObject ballParent = GameObject.Find("ball");
+        if (ballParent != null)
         {
-            GameObject ballParent = GameObject.Find("ball");
-            if (ballParent != null)
-            {
-                searchRoot = ballParent.transform;
-            }
+            searchRoot = ballParent.transform;
         }
 
         if (searchRoot != null && searchRoot.childCount > 0)
         {
             if (cueBall == null)
             {
-                Transform cue = searchRoot.Find("White Cue Ball");
-                if (cue == null) cue = searchRoot.Find("CueBall");
-                if (cue != null) cueBall = cue.gameObject;
+                foreach (Transform child in searchRoot)
+                {
+                    string name = child.name.ToLower();
+                    if (name.Contains("white") || name.Contains("cue"))
+                    {
+                        cueBall = child.gameObject;
+                        break;
+                    }
+                }
             }
 
             if (striker == null)
             {
-                Transform str = searchRoot.Find("Striker");
-                if (str != null) striker = str.gameObject;
-            }
-
-            // Populate object balls if list is empty
-            if (objectBalls == null || objectBalls.Count == 0)
-            {
-                objectBalls = new List<GameObject>();
-                for (int i = 0; i < searchRoot.childCount; i++)
+                foreach (Transform child in searchRoot)
                 {
-                    GameObject child = searchRoot.GetChild(i).gameObject;
-                    
-                    // Skip Cue Ball and Striker
-                    if (child == cueBall || child == striker)
-                        continue;
-
-                    // Include objects that have "Ball" or similar in their name
-                    if (child.name.ToLower().Contains("ball"))
+                    string name = child.name.ToLower();
+                    if (child.gameObject != cueBall && (name.Contains("black") || name.Contains("striker") || name == "8"))
                     {
-                        objectBalls.Add(child);
+                        striker = child.gameObject;
+                        break;
                     }
                 }
+            }
+
+            // Populate object balls if list is empty or incomplete
+            objectBalls = new List<GameObject>();
+            for (int i = 0; i < searchRoot.childCount; i++)
+            {
+                GameObject child = searchRoot.GetChild(i).gameObject;
+                
+                // Skip Cue Ball and Striker
+                if (child == cueBall || child == striker)
+                    continue;
+
+                objectBalls.Add(child);
             }
         }
 
         // Find Cue Stick in scene
         if (cueStick == null)
         {
-            cueStick = GameObject.Find("Cylinder");
+            cueStick = GameObject.Find("CueStick");
+            if (cueStick == null) cueStick = GameObject.Find("Cylinder");
             if (cueStick == null) cueStick = GameObject.Find("Stick");
-            if (cueStick == null) cueStick = GameObject.Find("CueStick");
             if (cueStick == null)
             {
                 foreach (GameObject go in GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
                 {
-                    if (go.name.ToLower().Contains("stick") || go.name.ToLower().Contains("cylinder"))
+                    string name = go.name.ToLower();
+                    if (name.Contains("stick") || name.Contains("cylinder"))
                     {
                         if (go != table && go != cueBall && go != striker && !objectBalls.Contains(go))
                         {
@@ -232,13 +236,15 @@ public class PoolGameSetup : MonoBehaviour
         {
             if (ball == null) continue;
 
-            // Ensure SphereCollider exists
+            // Ensure SphereCollider exists and is centered with standard unit radius
             SphereCollider sc = ball.GetComponent<SphereCollider>();
             if (sc == null)
             {
                 sc = ball.AddComponent<SphereCollider>();
             }
             sc.material = ballMat;
+            sc.center = Vector3.zero; // Fix offset center on imported meshes!
+            sc.radius = 0.5f;        // Standard sphere radius matching mesh scale
 
             // Ensure Rigidbody exists and has the correct settings
             Rigidbody rb = ball.GetComponent<Rigidbody>();
@@ -353,10 +359,12 @@ public class PoolGameSetup : MonoBehaviour
             new Vector2(0.5f, 3f),
             new Vector2(1.5f, 3f),
             
-            // Row 4 (3 balls symmetrically placed)
+            // Row 4 (5 balls for full 15-ball triangle rack)
+            new Vector2(-2f, 4f),
             new Vector2(-1f, 4f),
             new Vector2(0f, 4f),
-            new Vector2(1f, 4f)
+            new Vector2(1f, 4f),
+            new Vector2(2f, 4f)
         };
 
         // Separate out object balls list and create a master list of balls to place

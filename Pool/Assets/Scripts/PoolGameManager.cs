@@ -464,9 +464,36 @@ public class PoolGameManager : MonoBehaviour
     /// Balls with "(1)" in name = Stripes (group 2).
     /// The active player who pocketed gets that ball's group.
     /// </summary>
+    private bool IsSolidBall(GameObject ball)
+    {
+        if (ball == null) return true;
+        string name = ball.name.ToLower();
+
+        // 1. Explicit (1) in name -> Stripe
+        if (name.Contains("(1)")) return false;
+
+        // 2. Extract digits from name (e.g. billiard_ball008 -> 8, billiard_ball014 -> 14)
+        string digits = System.Text.RegularExpressions.Regex.Match(name, @"\d+").Value;
+        if (int.TryParse(digits, out int ballNum))
+        {
+            if (ballNum >= 9 && ballNum <= 15) return false; // Stripes
+            if (ballNum >= 1 && ballNum <= 7) return true;   // Solids
+        }
+
+        // 3. Fallback: position in setupHelper.objectBalls list (first half = Solids, second half = Stripes)
+        if (setupHelper != null && setupHelper.objectBalls != null)
+        {
+            int index = setupHelper.objectBalls.IndexOf(ball);
+            int half = setupHelper.objectBalls.Count / 2;
+            if (index >= half) return false;
+        }
+
+        return true;
+    }
+
     private void AssignBallTypes(GameObject firstPocketedBall)
     {
-        bool pocketedSolid = !firstPocketedBall.name.Contains("(1)");
+        bool pocketedSolid = IsSolidBall(firstPocketedBall);
 
         if (pocketedSolid)
         {
@@ -503,7 +530,7 @@ public class PoolGameManager : MonoBehaviour
         foreach (GameObject ball in setupHelper.objectBalls)
         {
             if (ball == null) continue;
-            bool isSolid = !ball.name.Contains("(1)");
+            bool isSolid = IsSolidBall(ball);
 
             if (player1BallGroup == 1) // P1 = Solids
             {
@@ -755,13 +782,15 @@ public class PoolGameManager : MonoBehaviour
         {
             string p1Type = player1BallGroup == 1 ? "Solids" : "Stripes";
             string p2Type = player2BallGroup == 1 ? "Solids" : "Stripes";
-            int p1Pocketed = 6 - GetRemainingBallsCount(1);
-            int p2Pocketed = 6 - GetRemainingBallsCount(2);
+            int p1Total = player1Balls.Count;
+            int p2Total = player2Balls.Count;
+            int p1Pocketed = p1Total - GetRemainingBallsCount(1);
+            int p2Pocketed = p2Total - GetRemainingBallsCount(2);
 
             if (player1ScoreText != null)
-                player1ScoreText.text = "P1 [" + p1Type + "]: " + p1Pocketed + "/6";
+                player1ScoreText.text = "P1 [" + p1Type + "]: " + p1Pocketed + "/" + p1Total;
             if (player2ScoreText != null)
-                player2ScoreText.text = "P2 [" + p2Type + "]: " + p2Pocketed + "/6";
+                player2ScoreText.text = "P2 [" + p2Type + "]: " + p2Pocketed + "/" + p2Total;
         }
         else
         {
