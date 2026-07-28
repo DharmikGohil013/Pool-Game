@@ -102,7 +102,7 @@ public class PoolGameManager : MonoBehaviour
     {
         if (setupHelper == null || setupHelper.table == null) return;
 
-        float tableTopY = setupHelper.table.transform.position.y + (setupHelper.table.transform.localScale.y / 2f);
+        float tableTopY = setupHelper.GetTableTopY();
         float thresholdY = tableTopY - pocketYThreshold;
 
         // 1. Check Cue Ball
@@ -467,26 +467,23 @@ public class PoolGameManager : MonoBehaviour
     private bool IsSolidBall(GameObject ball)
     {
         if (ball == null) return true;
-        string name = ball.name.ToLower();
+        if (setupHelper != null)
+        {
+            return setupHelper.IsSolidBall(ball);
+        }
 
-        // 1. Explicit (1) in name -> Stripe
+        string name = ball.name.ToLower();
+        if (name.Contains("black") || name.Contains("striker") || name == "8") return false;
         if (name.Contains("(1)")) return false;
 
-        // 2. Extract digits from name (e.g. billiard_ball008 -> 8, billiard_ball014 -> 14)
         string digits = System.Text.RegularExpressions.Regex.Match(name, @"\d+").Value;
         if (int.TryParse(digits, out int ballNum))
         {
-            if (ballNum >= 9 && ballNum <= 15) return false; // Stripes
-            if (ballNum >= 1 && ballNum <= 7) return true;   // Solids
+            if (ballNum >= 8 && ballNum <= 15) return false;
+            if (ballNum >= 1 && ballNum <= 7) return true;
         }
 
-        // 3. Fallback: position in setupHelper.objectBalls list (first half = Solids, second half = Stripes)
-        if (setupHelper != null && setupHelper.objectBalls != null)
-        {
-            int index = setupHelper.objectBalls.IndexOf(ball);
-            int half = setupHelper.objectBalls.Count / 2;
-            if (index >= half) return false;
-        }
+        if (name == "billiard_ball") return true;
 
         return true;
     }
@@ -681,11 +678,11 @@ public class PoolGameManager : MonoBehaviour
 
         setupHelper.cueBall.SetActive(true);
 
-        // Position at the head spot
+        // Position at the head spot resting on top of table surface
         if (setupHelper.table != null)
         {
-            float tableTopY = setupHelper.table.transform.position.y + (setupHelper.table.transform.localScale.y / 2f);
-            float ballRadius = 0.5f * setupHelper.cueBall.transform.localScale.y;
+            float tableTopY = setupHelper.GetTableTopY();
+            float ballRadius = setupHelper.GetBallRadius(setupHelper.cueBall);
             setupHelper.cueBall.transform.position = new Vector3(
                 setupHelper.table.transform.position.x,
                 tableTopY + ballRadius,

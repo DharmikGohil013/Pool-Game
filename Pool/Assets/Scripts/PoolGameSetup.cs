@@ -24,22 +24,22 @@ public class PoolGameSetup : MonoBehaviour
     public float ballMass = 1.0f;
 
     [Tooltip("Linear drag of each ball to simulate rolling resistance.")]
-    public float ballDrag = 1.2f;
+    public float ballDrag = 0.8f;
 
     [Tooltip("Angular drag of each ball to simulate spin resistance.")]
-    public float ballAngularDrag = 1.2f;
+    public float ballAngularDrag = 0.8f;
 
     [Tooltip("Friction of the ball physics material.")]
     public float ballFriction = 0.05f;
 
     [Tooltip("Bounciness of the ball physics material.")]
-    public float ballBounciness = 0.85f;
+    public float ballBounciness = 0.65f;
 
     [Tooltip("Friction of the table surface physics material.")]
     public float tableFriction = 0.15f;
 
-    [Tooltip("Bounciness of the table surface physics material.")]
-    public float tableBounciness = 0.2f;
+    [Tooltip("Bounciness of the table surface physics material (0.0 prevents vertical tennis-ball bouncing).")]
+    public float tableBounciness = 0.0f;
 
     [Header("Rack Layout Settings")]
     [Tooltip("Z-coordinate offset from the table center for the cue ball (head spot).")]
@@ -48,15 +48,18 @@ public class PoolGameSetup : MonoBehaviour
     [Tooltip("Z-coordinate offset from the table center for the rack apex (foot spot).")]
     public float rackApexZOffset = 3.5f;
 
-    [Tooltip("Extra spacing gap factor to prevent balls overlapping on start (1.0 = tight pack, 1.02 = 2% gap).")]
-    public float spacingFactor = 1.02f;
+    [Tooltip("Extra spacing gap factor to prevent balls overlapping on start (1.0 = tight pack, 1.002 = perfect tight rack).")]
+    public float spacingFactor = 1.002f;
+
+    [Tooltip("Rotation applied to racked balls so numbers face upright to the camera.")]
+    public Vector3 ballRotation = new Vector3(0f, 0f, 0f);
 
     [Header("Stick Setup Settings")]
     [Tooltip("Gap between the stick tip and the cue ball.")]
     public float stickBallGap = 0.15f;
 
     [Tooltip("Rotation of the cue stick.")]
-    public Vector3 stickRotation = new Vector3(0f, 0f, 0f);
+    public Vector3 stickRotation = new Vector3(5.5f, 0f, 0f);
 
     private void Start()
     {
@@ -180,29 +183,56 @@ public class PoolGameSetup : MonoBehaviour
     [ContextMenu("Apply Physics Settings")]
     public void ApplyPhysicsSettings()
     {
-        // 1. Table Physics Setup
+        // 1. Table Physics Setup: Remove BoxColliders and attach MeshColliders to Table and all child meshes
         if (table != null)
         {
-            // Ensure Table has a Collider
-            Collider tableCollider = table.GetComponent<Collider>();
-            if (tableCollider == null)
-            {
-                tableCollider = table.AddComponent<BoxCollider>();
-            }
-
-            // Create and assign Table Physics Material
+            // Create Table Physics Material
             PhysicsMaterial tableMat = new PhysicsMaterial
             {
                 name = "TablePhysicsMaterial",
                 staticFriction = tableFriction,
                 dynamicFriction = tableFriction,
-                bounciness = tableBounciness,
+                bounciness = 0.0f,
                 frictionCombine = PhysicsMaterialCombine.Average,
-                bounceCombine = PhysicsMaterialCombine.Average
+                bounceCombine = PhysicsMaterialCombine.Minimum
             };
-            tableCollider.material = tableMat;
 
-            // Make sure the Table does not move!
+            // Remove BoxColliders from table object itself and children (except Hall pocket triggers)
+            BoxCollider[] oldBoxes = table.GetComponentsInChildren<BoxCollider>(true);
+            foreach (BoxCollider box in oldBoxes)
+            {
+                if (box == null) continue;
+                if (box.gameObject.name.ToLower().Contains("hall") || (box.transform.parent != null && box.transform.parent.name.ToLower().Contains("hall")))
+                    continue;
+
+                DestroyImmediate(box);
+            }
+
+            // Ensure MeshCollider is attached ONLY to table mesh (pooltable_low), NOT ceiling_light
+            MeshFilter[] meshFilters = table.GetComponentsInChildren<MeshFilter>(true);
+            foreach (MeshFilter mf in meshFilters)
+            {
+                if (mf == null || mf.sharedMesh == null) continue;
+                string name = mf.gameObject.name.ToLower();
+                if (name.Contains("hall") || name.Contains("light") || name.Contains("ceiling") || name.Contains("lamp"))
+                    continue;
+                if (mf.transform.parent != null)
+                {
+                    string pName = mf.transform.parent.name.ToLower();
+                    if (pName.Contains("hall") || pName.Contains("light") || pName.Contains("ceiling"))
+                        continue;
+                }
+
+                MeshCollider mc = mf.GetComponent<MeshCollider>();
+                if (mc == null)
+                {
+                    mc = mf.gameObject.AddComponent<MeshCollider>();
+                }
+                mc.sharedMesh = mf.sharedMesh;
+                mc.material = tableMat;
+            }
+
+            // Ensure Table Rigidbody is kinematic so it stays stationary
             Rigidbody tableRb = table.GetComponent<Rigidbody>();
             if (tableRb != null)
             {
@@ -223,7 +253,7 @@ public class PoolGameSetup : MonoBehaviour
             dynamicFriction = ballFriction,
             bounciness = ballBounciness,
             frictionCombine = PhysicsMaterialCombine.Minimum,
-            bounceCombine = PhysicsMaterialCombine.Maximum
+            bounceCombine = PhysicsMaterialCombine.Average
         };
 
         // 2. Setup all balls
@@ -236,7 +266,7 @@ public class PoolGameSetup : MonoBehaviour
         {
             if (ball == null) continue;
 
-            // Ensure SphereCollider exists and is centered with standard unit radius
+            // Ensure SphereCollider exists and is centered with exact radius matching mesh bounds
             SphereCollider sc = ball.GetComponent<SphereCollider>();
             if (sc == null)
             {
@@ -244,7 +274,18 @@ public class PoolGameSetup : MonoBehaviour
             }
             sc.material = ballMat;
             sc.center = Vector3.zero; // Fix offset center on imported meshes!
-            sc.radius = 0.5f;        // Standard sphere radius matching mesh scale
+
+            Renderer rend = ball.GetComponent<Renderer>();
+            if (rend == null) rend = ball.GetComponentInChildren<Renderer>();
+            if (rend != null && ball.transform.lossyScale.x > 0.001f)
+            {
+                float meshWorldRadius = Mathf.Max(rend.bounds.extents.x, rend.bounds.extents.z);
+                sc.radius = meshWorldRadius / ball.transform.lossyScale.x;
+            }
+            else
+            {
+                sc.radius = 0.5f;
+            }
 
             // Ensure Rigidbody exists and has the correct settings
             Rigidbody rb = ball.GetComponent<Rigidbody>();
@@ -284,6 +325,124 @@ public class PoolGameSetup : MonoBehaviour
         }
     }
 
+    public bool IsSolidBall(GameObject ball)
+    {
+        if (ball == null) return true;
+        string name = ball.name.ToLower();
+        if (name.Contains("black") || name.Contains("striker") || name == "8") return false;
+
+        string digits = System.Text.RegularExpressions.Regex.Match(name, @"\d+").Value;
+        if (int.TryParse(digits, out int ballNum))
+        {
+            if (ballNum >= 8 && ballNum <= 15) return false;
+            if (ballNum >= 1 && ballNum <= 7) return true;
+        }
+
+        if (name == "billiard_ball") return true;
+
+        if (objectBalls != null && objectBalls.Contains(ball))
+        {
+            int index = objectBalls.IndexOf(ball);
+            return index < (objectBalls.Count / 2);
+        }
+
+        return true;
+    }
+
+    public float GetBallRadius(GameObject ball)
+    {
+        if (ball != null)
+        {
+            // 1. Prefer un-rotated mesh filter bounds
+            MeshFilter mf = ball.GetComponent<MeshFilter>();
+            if (mf == null) mf = ball.GetComponentInChildren<MeshFilter>();
+            if (mf != null && mf.sharedMesh != null)
+            {
+                Vector3 ext = mf.sharedMesh.bounds.extents;
+                float localRadius = Mathf.Max(ext.x, ext.y, ext.z);
+                float scale = Mathf.Max(ball.transform.lossyScale.x, ball.transform.lossyScale.z);
+                if (localRadius * scale > 0.01f)
+                    return localRadius * scale;
+            }
+
+            // 2. Fallback to SphereCollider
+            SphereCollider sc = ball.GetComponent<SphereCollider>();
+            if (sc != null && sc.radius > 0.01f)
+            {
+                float scale = Mathf.Max(ball.transform.lossyScale.x, ball.transform.lossyScale.z);
+                return sc.radius * scale;
+            }
+
+            // 3. Fallback to Renderer bounds
+            Renderer r = ball.GetComponent<Renderer>();
+            if (r == null) r = ball.GetComponentInChildren<Renderer>();
+            if (r != null)
+            {
+                float ext = Mathf.Max(r.bounds.extents.x, r.bounds.extents.z);
+                if (ext > 0.01f) return ext;
+            }
+        }
+
+        float s = ball != null ? ball.transform.localScale.y : 1.0f;
+        return 0.5f * s;
+    }
+
+    public float GetTableTopY()
+    {
+        if (table != null)
+        {
+            // 1. Precise surface detection: Raycast down from above table center onto table colliders
+            Collider[] colliders = table.GetComponentsInChildren<Collider>(true);
+            Vector3 rayStart = table.transform.position + Vector3.up * 50f;
+            float feltSurfaceY = -9999f;
+
+            foreach (Collider col in colliders)
+            {
+                if (col == null || col.isTrigger) continue;
+                string name = col.gameObject.name.ToLower();
+                if (name.Contains("hall") || name.Contains("light") || name.Contains("ceiling") || name.Contains("lamp") || name.Contains("pocket") || name.Contains("trigger"))
+                    continue;
+
+                Ray ray = new Ray(rayStart, Vector3.down);
+                if (col.Raycast(ray, out RaycastHit hit, 100f))
+                {
+                    if (hit.point.y > feltSurfaceY)
+                    {
+                        feltSurfaceY = hit.point.y;
+                    }
+                }
+            }
+
+            if (feltSurfaceY > -9000f)
+            {
+                return feltSurfaceY;
+            }
+
+            // Fallback: Check Mesh filter bounds
+            Renderer[] renderers = table.GetComponentsInChildren<Renderer>(true);
+            float maxY = -9999f;
+            bool found = false;
+            foreach (Renderer r in renderers)
+            {
+                if (r == null) continue;
+                string name = r.gameObject.name.ToLower();
+                if (name.Contains("hall") || name.Contains("light") || name.Contains("ceiling") || name.Contains("lamp"))
+                    continue;
+
+                if (r.bounds.max.y > maxY)
+                {
+                    maxY = r.bounds.max.y;
+                    found = true;
+                }
+            }
+            if (found) return maxY;
+
+            return table.transform.position.y + (table.transform.localScale.y / 2f);
+        }
+
+        return -3.267339f;
+    }
+
     /// <summary>
     /// Positions the Cue Ball and racks the object balls (including the black striker ball) in a triangle.
     /// </summary>
@@ -296,20 +455,16 @@ public class PoolGameSetup : MonoBehaviour
             return;
         }
 
-        // Calculate Y position based on Table top surface and ball radius
-        float tableTopY = table.transform.position.y + (table.transform.localScale.y / 2f);
-        
-        // Get ball radius (assume cue ball scale if available, else 0.5f)
-        float ballScale = 1.0f;
-        if (cueBall != null)
+        // Get actual visual ball radius from Mesh bounds
+        float ballRadius = GetBallRadius(cueBall);
+        if (ballRadius <= 0.01f && objectBalls != null && objectBalls.Count > 0)
         {
-            ballScale = cueBall.transform.localScale.y;
+            ballRadius = GetBallRadius(objectBalls[0]);
         }
-        else if (objectBalls != null && objectBalls.Count > 0 && objectBalls[0] != null)
-        {
-            ballScale = objectBalls[0].transform.localScale.y;
-        }
-        float ballRadius = 0.5f * ballScale;
+        if (ballRadius <= 0.01f) ballRadius = 0.3f;
+
+        // Calculate Y position based on exact Table Mesh surface top and ball radius
+        float tableTopY = GetTableTopY();
         float targetY = tableTopY + ballRadius;
 
         // Position Cue Ball
@@ -322,18 +477,11 @@ public class PoolGameSetup : MonoBehaviour
             {
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                rb.Sleep();
             }
         }
 
-        // Position Object Balls in a triangle rack
-        // We have 12 object balls + 1 striker (black ball) = 13 balls to position.
-        // Let's create the coordinate offsets for a standard triangle layout (pointing in negative Z direction):
-        // Row 0: 1 ball (Apex)
-        // Row 1: 2 balls
-        // Row 2: 3 balls (Striker goes in the middle)
-        // Row 3: 4 balls
-        // Row 4: 3 balls (remaining)
-        
+        // Position Object Balls in a standard 8-Ball triangle rack
         float d = ballRadius * 2f;
         float spacingX = d * spacingFactor;
         float spacingZ = d * Mathf.Sqrt(3f) / 2f * spacingFactor;
@@ -341,16 +489,16 @@ public class PoolGameSetup : MonoBehaviour
         // Row coordinate offsets: (X offset multiplier, Row index multiplier)
         List<Vector2> rackSlots = new List<Vector2>()
         {
-            // Row 0 (1 ball)
+            // Row 0 (1 ball - Apex)
             new Vector2(0f, 0f),
             
             // Row 1 (2 balls)
             new Vector2(-0.5f, 1f),
             new Vector2(0.5f, 1f),
             
-            // Row 2 (3 balls) - Index 4 is the middle slot where Striker (8-Ball) goes!
+            // Row 2 (3 balls) - Index 4 is the middle slot where 8-Ball goes!
             new Vector2(-1f, 2f),
-            new Vector2(0f, 2f), // Index 4: Striker Slot
+            new Vector2(0f, 2f),
             new Vector2(1f, 2f),
             
             // Row 3 (4 balls)
@@ -359,7 +507,7 @@ public class PoolGameSetup : MonoBehaviour
             new Vector2(0.5f, 3f),
             new Vector2(1.5f, 3f),
             
-            // Row 4 (5 balls for full 15-ball triangle rack)
+            // Row 4 (5 balls)
             new Vector2(-2f, 4f),
             new Vector2(-1f, 4f),
             new Vector2(0f, 4f),
@@ -367,29 +515,89 @@ public class PoolGameSetup : MonoBehaviour
             new Vector2(2f, 4f)
         };
 
-        // Separate out object balls list and create a master list of balls to place
-        List<GameObject> ballsToRack = new List<GameObject>();
-        
-        // We want the striker to go specifically to index 4 (middle of row 2)
-        // Let's build a map from slot index to GameObject
+        // Separate object balls into Solids and Stripes
+        List<GameObject> solidsList = new List<GameObject>();
+        List<GameObject> stripesList = new List<GameObject>();
+
+        if (objectBalls != null)
+        {
+            foreach (GameObject b in objectBalls)
+            {
+                if (b == null) continue;
+                if (IsSolidBall(b))
+                {
+                    solidsList.Add(b);
+                }
+                else
+                {
+                    stripesList.Add(b);
+                }
+            }
+        }
+
+        // Standard official 8-Ball Rack pattern matching reference image:
+        // Slot 0 (Row 1): Solid (Apex)
+        // Slot 1 (Row 2, L): Stripe
+        // Slot 2 (Row 2, R): Solid
+        // Slot 3 (Row 3, L): Solid
+        // Slot 4 (Row 3, Center): 8-Ball (Striker)
+        // Slot 5 (Row 3, R): Stripe
+        // Slot 6 (Row 4, Pos 1): Stripe
+        // Slot 7 (Row 4, Pos 2): Solid
+        // Slot 8 (Row 4, Pos 3): Stripe
+        // Slot 9 (Row 4, Pos 4): Solid
+        // Slot 10 (Row 5, Pos 1 / Left Corner): Solid
+        // Slot 11 (Row 5, Pos 2): Stripe
+        // Slot 12 (Row 5, Pos 3): Stripe
+        // Slot 13 (Row 5, Pos 4): Solid
+        // Slot 14 (Row 5, Pos 5 / Right Corner): Stripe
+
+        int[] solidSlotIndices = new int[] { 0, 2, 3, 7, 9, 10, 13 };
+        int[] stripeSlotIndices = new int[] { 1, 5, 6, 8, 11, 12, 14 };
+
         Dictionary<int, GameObject> slotToBallMap = new Dictionary<int, GameObject>();
-        
+
         if (striker != null)
         {
             slotToBallMap[4] = striker;
         }
 
-        int currentObjBallIdx = 0;
+        for (int i = 0; i < solidSlotIndices.Length; i++)
+        {
+            int slot = solidSlotIndices[i];
+            if (i < solidsList.Count)
+            {
+                slotToBallMap[slot] = solidsList[i];
+            }
+        }
+
+        for (int i = 0; i < stripeSlotIndices.Length; i++)
+        {
+            int slot = stripeSlotIndices[i];
+            if (i < stripesList.Count)
+            {
+                slotToBallMap[slot] = stripesList[i];
+            }
+        }
+
+        // Fallback for any unmapped balls
+        List<GameObject> unmappedBalls = new List<GameObject>();
+        if (objectBalls != null)
+        {
+            foreach (GameObject b in objectBalls)
+            {
+                if (b != null && !slotToBallMap.ContainsValue(b))
+                {
+                    unmappedBalls.Add(b);
+                }
+            }
+        }
+        int unmappedIdx = 0;
         for (int i = 0; i < rackSlots.Count; i++)
         {
-            // Skip the striker slot since it is already assigned
-            if (slotToBallMap.ContainsKey(i))
-                continue;
-
-            if (objectBalls != null && currentObjBallIdx < objectBalls.Count)
+            if (!slotToBallMap.ContainsKey(i) && unmappedIdx < unmappedBalls.Count)
             {
-                slotToBallMap[i] = objectBalls[currentObjBallIdx];
-                currentObjBallIdx++;
+                slotToBallMap[i] = unmappedBalls[unmappedIdx++];
             }
         }
 
@@ -409,13 +617,14 @@ public class PoolGameSetup : MonoBehaviour
             float posZ = tablePos.z + rackApexZOffset + (offsetMultiplier.y * spacingZ);
 
             ball.transform.position = new Vector3(posX, targetY, posZ);
+            ball.transform.rotation = Quaternion.Euler(ballRotation);
             
-            // Reset velocities in case they are already moving
             Rigidbody rb = ball.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                rb.Sleep();
             }
         }
     }
@@ -428,25 +637,21 @@ public class PoolGameSetup : MonoBehaviour
     {
         if (cueStick == null || cueBall == null) return;
 
-        // Apply stick rotation
-        cueStick.transform.eulerAngles = stickRotation;
+        float elevationAngle = stickRotation.x > 0.1f ? stickRotation.x : 5.5f;
+        Quaternion rotation = Quaternion.AngleAxis(0f, Vector3.up) * Quaternion.Euler(elevationAngle, 0f, 0f);
+        cueStick.transform.rotation = rotation;
 
-        // Calculate Y position based on Table top surface and ball radius
-        float tableTopY = table != null ? (table.transform.position.y + (table.transform.localScale.y / 2f)) : cueBall.transform.position.y;
-        float ballScale = cueBall.transform.localScale.y;
-        float ballRadius = 0.5f * ballScale;
+        float ballRadius = GetBallRadius(cueBall);
 
-        // A cylinder's length is its scale.y * 2.0f
-        float stickLength = cueStick.transform.localScale.y * 2f;
-        
-        // Position stick behind the cue ball along the Z-axis
-        Vector3 cueBallPos = cueBall.transform.position;
-        float stickPosZ = cueBallPos.z - (stickLength / 2f) - ballRadius - stickBallGap;
+        Renderer rend = cueStick.GetComponent<Renderer>();
+        if (rend == null) rend = cueStick.GetComponentInChildren<Renderer>();
+        float stickLength = rend != null ? rend.bounds.size.z : cueStick.transform.localScale.y * 2f;
 
-        // Set stick position (using Y of 0.25f or dynamic Y based on ball center height)
-        cueStick.transform.position = new Vector3(cueBallPos.x, cueBallPos.y, stickPosZ);
-        
-        // Ensure its Rigidbody velocity is reset (only if not kinematic)
+        float totalOffset = (stickLength / 2f) + ballRadius + stickBallGap;
+        Vector3 stickDir = rotation * Vector3.forward;
+
+        cueStick.transform.position = cueBall.transform.position - stickDir * totalOffset;
+
         Rigidbody rb = cueStick.GetComponent<Rigidbody>();
         if (rb != null && !rb.isKinematic)
         {
@@ -454,7 +659,6 @@ public class PoolGameSetup : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        // Set active last so controller calculates rotation using the correct starting position
         cueStick.SetActive(true);
     }
 }

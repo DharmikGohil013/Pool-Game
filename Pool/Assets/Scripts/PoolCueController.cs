@@ -100,12 +100,13 @@ public class PoolCueController : MonoBehaviour
             if (cueBall != null)
             {
                 cueBallRb = cueBall.GetComponent<Rigidbody>();
-                ballRadius = 0.5f * cueBall.transform.localScale.y;
+                ballRadius = setupHelper.GetBallRadius(cueBall);
             }
         }
 
-        // Default Cylinder mesh height = 2.0 along local Y
-        stickLength = transform.localScale.y * 2f;
+        Renderer rend = GetComponent<Renderer>();
+        if (rend == null) rend = GetComponentInChildren<Renderer>();
+        stickLength = rend != null ? rend.bounds.size.z : transform.localScale.y * 2f;
 
         // Ensure stick colliders are disabled so it never physically interferes with balls
         Collider[] colliders = GetComponentsInChildren<Collider>(true);
@@ -246,22 +247,18 @@ public class PoolCueController : MonoBehaviour
     {
         if (cueBall == null) return;
 
-        // Calculate rotation around cue ball
-        Quaternion rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
+        float elevationAngle = (setupHelper != null && setupHelper.stickRotation.x > 0.1f) ? setupHelper.stickRotation.x : 5.5f;
 
-        // Position offset: center of cylinder back by half-length + ball radius + gap + pull-back
+        // Rotation: Y-axis aiming angle + X-axis elevation angle (pitching tip down towards ball)
+        Quaternion rotation = Quaternion.AngleAxis(currentAngle, Vector3.up) * Quaternion.Euler(elevationAngle, 0f, 0f);
+
+        // Position offset: center of stick back by half-length + ball radius + gap + pull-back
         float totalOffset = (stickLength / 2f) + ballRadius + baseGap + currentPullBack;
-        Vector3 offsetDir = rotation * new Vector3(0f, 0f, -totalOffset);
+        Vector3 stickDir = rotation * Vector3.forward;
 
-        // Place stick behind cue ball
-        Vector3 targetPos = cueBall.transform.position + offsetDir;
-        targetPos.y = transform.position.y; // Maintain stick height
-
-        transform.position = targetPos;
-
-        // Align stick rotation to point at the cue ball using configured stickRotation X (default 0)
-        float rotX = setupHelper != null ? setupHelper.stickRotation.x : 0f;
-        transform.rotation = rotation * Quaternion.Euler(rotX, 0f, 0f);
+        // Place stick centered along stickDir pointing directly at cue ball
+        transform.position = cueBall.transform.position - stickDir * totalOffset;
+        transform.rotation = rotation;
     }
 
     private void Shoot()

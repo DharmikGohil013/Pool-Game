@@ -240,6 +240,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78515566}
   m_CullTransparentMesh: 1
+--- !u!134 &94728617
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BallPhysicsMaterial
+  serializedVersion: 2
+  m_DynamicFriction: 0.08
+  m_StaticFriction: 0.08
+  m_Bounciness: 0.6
+  m_FrictionCombine: 2
+  m_BounceCombine: 0
 --- !u!1001 &228982030
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -266,27 +279,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d7119b4c81bac1a438d36653566cdc88, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.76
+      value: -2.6430852
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d7119b4c81bac1a438d36653566cdc88, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.95
+      value: -8.202549
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d7119b4c81bac1a438d36653566cdc88, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99938893
+      value: 0.99884844
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d7119b4c81bac1a438d36653566cdc88, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.034954607
+      value: 0.047978133
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d7119b4c81bac1a438d36653566cdc88, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d7119b4c81bac1a438d36653566cdc88, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d7119b4c81bac1a438d36653566cdc88, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -428,7 +441,7 @@ Camera:
   far clip plane: 50
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -727,9 +740,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392901081}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.75108945, y: -0.65568316, z: -0.054517824, w: -0.054517824}
-  m_LocalPosition: {x: 0, y: -6.13, z: 4.5600147}
-  m_LocalScale: {x: 0.59999996, y: 0.5999999, z: 0.59999996}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.1441107, z: 4.095108}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -743,8 +756,8 @@ Rigidbody:
   m_GameObject: {fileID: 392901081}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -768,7 +781,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392901081}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -780,7 +793,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
@@ -808,7 +821,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 2
@@ -860,7 +873,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -1337,9 +1350,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 562914882}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7228423, y: -0.6893919, z: -0.033451438, w: -0.03344991}
-  m_LocalPosition: {x: -0.91799986, y: -6.13, z: 5.0900226}
-  m_LocalScale: {x: 0.59999996, y: 0.5999999, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.68717164, y: 3.1441107, z: 4.690216}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -1410,8 +1423,8 @@ Rigidbody:
   m_GameObject: {fileID: 562914882}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1435,7 +1448,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 562914882}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1447,8 +1460,21 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!134 &588563425
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TablePhysicsMaterial
+  serializedVersion: 2
+  m_DynamicFriction: 0.2
+  m_StaticFriction: 0.2
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 2
 --- !u!1001 &623763521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1543,39 +1569,15 @@ PrefabInstance:
     - {fileID: 2021637969190335542, guid: c55e9a0d1ad0e55468ad547ce903a18a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c55e9a0d1ad0e55468ad547ce903a18a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 623763524}
     - targetCorrespondingSourceObject: {fileID: -3790097285394353858, guid: c55e9a0d1ad0e55468ad547ce903a18a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1262150671}
+      addedObject: {fileID: 1262150668}
   m_SourcePrefab: {fileID: 100100000, guid: c55e9a0d1ad0e55468ad547ce903a18a, type: 3}
 --- !u!1 &623763522 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c55e9a0d1ad0e55468ad547ce903a18a, type: 3}
   m_PrefabInstance: {fileID: 623763521}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &623763524
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 623763522}
-  m_Material: {fileID: 1176531416}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &624840873
 GameObject:
   m_ObjectHideFlags: 0
@@ -1604,9 +1606,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624840873}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.74448293, y: -0.65743047, z: -0.08188328, w: -0.08261646}
-  m_LocalPosition: {x: 0.6119999, y: -6.13, z: 4.5600147}
-  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.5153787, y: 3.1441107, z: 4.392662}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -1677,8 +1679,8 @@ Rigidbody:
   m_GameObject: {fileID: 624840873}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1702,7 +1704,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624840873}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1714,7 +1716,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &678306251
 GameObject:
@@ -1744,9 +1746,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 678306251}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6271484, y: 0.77685106, z: 0.03992045, w: 0.039920654}
-  m_LocalPosition: {x: 0.30599996, y: -6.13, z: 5.0900226}
-  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.5999999}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.17179291, y: 3.1441107, z: 3.797554}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -1817,8 +1819,8 @@ Rigidbody:
   m_GameObject: {fileID: 678306251}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1842,7 +1844,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 678306251}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1854,7 +1856,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &681814683
 GameObject:
@@ -2005,9 +2007,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683379532}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7063792, y: 0.7063793, z: 0.03206958, w: 0.032068625}
-  m_LocalPosition: {x: -0.6119999, y: -6.13, z: 5.62003}
-  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.17179291, y: 3.1441107, z: 4.392662}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -2078,8 +2080,8 @@ Rigidbody:
   m_GameObject: {fileID: 683379532}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2103,7 +2105,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683379532}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2115,7 +2117,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &744200654
 GameObject:
@@ -2803,9 +2805,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864008830}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7688213, y: -0.6391133, z: 0.014965898, w: 0.014966663}
-  m_LocalPosition: {x: -0.30599996, y: -6.13, z: 4.0300074}
-  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.17179291, y: 3.1441107, z: 3.797554}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -2876,8 +2878,8 @@ Rigidbody:
   m_GameObject: {fileID: 864008830}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2901,7 +2903,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864008830}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2913,7 +2915,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &878601546
 GameObject:
@@ -2943,9 +2945,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 878601546}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7066594, y: 0.7066597, z: 0.025147287, w: 0.025144415}
-  m_LocalPosition: {x: 0, y: -6.13, z: 5.62003}
-  m_LocalScale: {x: 0.6, y: 0.59999996, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.34358582, y: 3.1441107, z: 4.690216}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -3016,8 +3018,8 @@ Rigidbody:
   m_GameObject: {fileID: 878601546}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3041,7 +3043,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 878601546}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3053,7 +3055,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &938828172
 GameObject:
@@ -3140,9 +3142,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 938828172}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.49999994, y: -0.50000006, z: 0.49999982, w: 0.5000002}
-  m_LocalPosition: {x: 0, y: -6.13, z: -3.5}
-  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.59999996}
+  m_LocalRotation: {x: 0.6138681, y: -0.47029638, z: -0.32761827, w: -0.54282004}
+  m_LocalPosition: {x: 0, y: 3.1441107, z: -3.5}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -3156,8 +3158,8 @@ Rigidbody:
   m_GameObject: {fileID: 938828172}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3181,7 +3183,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 938828172}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3193,7 +3195,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.41922694
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &995186439
 GameObject:
@@ -3344,9 +3346,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1053321332}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7276312, y: -0.6849294, z: -0.026688576, w: -0.026688747}
-  m_LocalPosition: {x: -1.2239999, y: -6.13, z: 5.62003}
-  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.59999996}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.5153787, y: 3.1441107, z: 4.392662}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -3417,8 +3419,8 @@ Rigidbody:
   m_GameObject: {fileID: 1053321332}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3442,7 +3444,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1053321332}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3454,7 +3456,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1055906018
 GameObject:
@@ -3619,7 +3621,7 @@ Transform:
   m_GameObject: {fileID: 1118789755}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.01, z: 0}
+  m_LocalPosition: {x: 0, y: -6.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3673,43 +3675,18 @@ MonoBehaviour:
   - {fileID: 2062902836}
   - {fileID: 1442345916}
   ballMass: 1
-  ballDrag: 0.6
-  ballAngularDrag: 0.6
-  ballFriction: 0.05
-  ballBounciness: 0.85
-  tableFriction: 0.15
-  tableBounciness: 0.2
+  ballDrag: 0.8
+  ballAngularDrag: 0.8
+  ballFriction: 0.08
+  ballBounciness: 0.6
+  tableFriction: 0.2
+  tableBounciness: 0
   cueBallZOffset: -3.5
   rackApexZOffset: 3.5
-  spacingFactor: 1.02
+  spacingFactor: 1.002
+  ballRotation: {x: 0, y: 0, z: 0}
   stickBallGap: 0.15
   stickRotation: {x: 0, y: 0, z: 0}
---- !u!134 &1176531416
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: TablePhysicsMaterial
-  serializedVersion: 2
-  m_DynamicFriction: 0.15
-  m_StaticFriction: 0.15
-  m_Bounciness: 0.2
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
---- !u!134 &1192151200
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: BallPhysicsMaterial
-  serializedVersion: 2
-  m_DynamicFriction: 0.05
-  m_StaticFriction: 0.05
-  m_Bounciness: 0.85
-  m_FrictionCombine: 2
-  m_BounceCombine: 3
 --- !u!1 &1219872714
 GameObject:
   m_ObjectHideFlags: 0
@@ -3924,6 +3901,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -3957,14 +3935,14 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -3790097285394353858, guid: c55e9a0d1ad0e55468ad547ce903a18a, type: 3}
   m_PrefabInstance: {fileID: 623763521}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1262150671
-BoxCollider:
+--- !u!64 &1262150668
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1262150667}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 588563425}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3975,9 +3953,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 14.066982, y: 24.911507, z: 7.605926}
-  m_Center: {x: 0.0000007947285, y: -0.0000007947286, z: -3.802962}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6343303634382199129, guid: c55e9a0d1ad0e55468ad547ce903a18a, type: 3}
 --- !u!1 &1302632561
 GameObject:
   m_ObjectHideFlags: 0
@@ -4583,9 +4562,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442345916}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6518553, y: 0.7583125, z: 0.0048387363, w: 0.0048391}
-  m_LocalPosition: {x: 1.2239999, y: -6.13, z: 5.62003}
-  m_LocalScale: {x: 0.59999996, y: 0.5999999, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.68717164, y: 3.1441107, z: 4.690216}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -4656,8 +4635,8 @@ Rigidbody:
   m_GameObject: {fileID: 1442345916}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -4681,7 +4660,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442345916}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4693,7 +4672,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1481036712
 GameObject:
@@ -4860,9 +4839,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1559969377}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.698095, y: 0.70852345, z: -0.07299987, w: -0.07300028}
-  m_LocalPosition: {x: -0.30599996, y: -6.13, z: 5.0900226}
-  m_LocalScale: {x: 0.5999999, y: 0.6, z: 0.59999996}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.34358582, y: 3.1441107, z: 4.690216}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -4933,8 +4912,8 @@ Rigidbody:
   m_GameObject: {fileID: 1559969377}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -4958,7 +4937,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1559969377}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4970,7 +4949,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1610540151
 GameObject:
@@ -5139,9 +5118,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1678970784}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7375364, y: -0.6749448, z: 0.015648229, w: 0.015647471}
-  m_LocalPosition: {x: 0, y: -6.13, z: 3.5}
-  m_LocalScale: {x: 0.59999996, y: 0.6, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.1441107, z: 3.5}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -5212,8 +5191,8 @@ Rigidbody:
   m_GameObject: {fileID: 1678970784}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5237,7 +5216,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1678970784}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5249,7 +5228,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1810949731
 GameObject:
@@ -5400,9 +5379,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868397919}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.73739815, y: -0.67099524, z: -0.014634858, w: -0.076126374}
-  m_LocalPosition: {x: 0.91799986, y: -6.13, z: 5.0900226}
-  m_LocalScale: {x: 0.59999996, y: 0.6, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.34358582, y: 3.1441107, z: 4.095108}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -5473,8 +5452,8 @@ Rigidbody:
   m_GameObject: {fileID: 1868397919}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5498,7 +5477,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868397919}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5510,7 +5489,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1975371040
 GameObject:
@@ -5677,9 +5656,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039114875}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071069, y: -0.70710665, z: -0.000000052683554, w: 0.000000052683568}
-  m_LocalPosition: {x: 0.30599996, y: -6.13, z: 4.0300074}
-  m_LocalScale: {x: 0.5999999, y: 0.5999999, z: 0.59999996}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.34358582, y: 3.1441107, z: 4.095108}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -5750,8 +5729,8 @@ Rigidbody:
   m_GameObject: {fileID: 2039114875}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5775,7 +5754,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039114875}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5787,7 +5766,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2062902836
 GameObject:
@@ -5817,9 +5796,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062902836}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.68612254, y: 0.725366, z: 0.0392439, w: 0.03924282}
-  m_LocalPosition: {x: 0.6119999, y: -6.13, z: 5.62003}
-  m_LocalScale: {x: 0.6, y: 0.59999996, z: 0.59999985}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.1441107, z: 4.690216}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -5890,8 +5869,8 @@ Rigidbody:
   m_GameObject: {fileID: 2062902836}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5915,7 +5894,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062902836}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5927,7 +5906,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2081407737
 GameObject:
@@ -6094,9 +6073,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089242044}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7012756, y: 0.7111969, z: -0.034723893, w: -0.034724586}
-  m_LocalPosition: {x: -0.6119999, y: -6.13, z: 4.5600147}
-  m_LocalScale: {x: 0.6, y: 0.59999996, z: 0.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.17179291, y: 3.1441107, z: 4.392662}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1118789756}
@@ -6167,8 +6146,8 @@ Rigidbody:
   m_GameObject: {fileID: 2089242044}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.6
-  m_AngularDamping: 0.6
+  m_LinearDamping: 0.8
+  m_AngularDamping: 0.8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -6192,7 +6171,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089242044}
-  m_Material: {fileID: 1192151200}
+  m_Material: {fileID: 94728617}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -6204,7 +6183,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.28574997
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
